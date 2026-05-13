@@ -1,0 +1,1118 @@
+ 
+MAZE GENERATOR & SOLVER SYSTEM
+Technical Documentation
+ 
+ 
+Maze Generator & Solver Visualization System
+Technical Documentation
+________________________________________
+1. Project Overview
+Project Title
+Interactive Maze Generator and Solver Visualization
+________________________________________
+Project Description
+This project is a real-time interactive maze generation and maze solving visualization system built using modern web-based computer graphics technologies.
+The system dynamically:
+	generates a perfect maze using DFS-based recursive backtracking, 
+	visualizes the wall-carving process, 
+	solves the maze using stack-based backtracking, 
+	displays traversal and dead-end discovery, 
+	and renders the entire process in a 3D interactive environment. 
+The project is designed for a Computer Graphics assignment focused on:
+	procedural generation, 
+	graph traversal algorithms, 
+	animation, 
+	visualization, 
+	and interactive rendering. 
+________________________________________
+2. Assignment Objectives
+The project must:
+Generate a Maze
+	rectangular grid maze, 
+	random generation, 
+	proper/perfect maze, 
+	dynamically visualized generation. 
+Solve the Maze
+	automatically traverse maze, 
+	show exploration visually, 
+	backtrack at dead ends, 
+	highlight solution path. 
+Demonstrate Algorithms
+	stack-based DFS, 
+	backtracking, 
+	randomized traversal. 
+Provide Visualization
+	real-time rendering, 
+	wall removal animation, 
+	traversal animation, 
+	dead-end highlighting. 
+________________________________________
+3. Functional Requirements
+3.1 Maze Generation
+The system shall:
+	generate an R × C maze, 
+	initialize all walls, 
+	randomly carve paths, 
+	ensure every cell is reachable, 
+	ensure only one path exists between any two cells. 
+________________________________________
+3.2 Maze Solving
+The system shall:
+	find path from start to goal, 
+	visualize movement, 
+	identify dead ends, 
+	backtrack dynamically, 
+	display final successful path. 
+________________________________________
+3.3 Visualization
+The system shall:
+	render maze walls, 
+	animate wall destruction, 
+	render mouse traversal, 
+	show visited cells, 
+	show dead-end cells, 
+	highlight solution path. 
+________________________________________
+3.4 User Interaction
+The user shall be able to:
+	generate new maze, 
+	restart solver, 
+	control animation speed, 
+	switch camera view, 
+	optionally toggle bonus features. 
+________________________________________
+4. Non-Functional Requirements
+Performance
+	smooth rendering at 60 FPS, 
+	support medium-to-large mazes, 
+	efficient memory usage. 
+Maintainability
+	modular architecture, 
+	clean separation of logic/rendering, 
+	reusable components. 
+Scalability
+	support future algorithms, 
+	support additional rendering modes, 
+	support larger environments. 
+Readability
+	documented code, 
+	meaningful naming, 
+	structured folders. 
+________________________________________
+5. Technology Stack
+Layer	Technology
+Language	TypeScript
+Graphics Engine	Babylon.js
+Build Tool	Vite
+Rendering	WebGL/WebGPU via Babylon
+Styling	CSS
+Version Control	Git + GitHub
+Recording	Loom
+________________________________________
+
+6. Why Babylon.js
+Babylon.js was selected because it provides:
+	high-level 3D abstractions, 
+	real-time rendering, 
+	mesh management, 
+	cameras, 
+	lighting, 
+	animation systems, 
+	debugging tools, 
+	efficient scene graph architecture. 
+Advantages:
+	easier than raw WebGL, 
+	faster development, 
+	ideal for procedural visualization, 
+	excellent for educational graphics projects. 
+________________________________________
+7. System Architecture Architectural Style Modular Layered Architecture
+The project is divided into:
+	Core engine layer 
+	Maze logic layer 
+	Algorithm layer 
+	Rendering layer 
+	Animation layer 
+	UI layer 
+________________________________________
+8. High-Level System Design
++----------------------+
+|      User Input      |
++----------+-----------+
+           |
+           v
++----------------------+
+|      UI Layer        |
++----------+-----------+
+           |
+           v
++----------------------+
+|   Animation Engine   |
++----------+-----------+
+           |
+           v
++----------------------+
+|  Maze Algorithms     |
+|  - Generator         |
+|  - Solver            |
++----------+-----------+
+           |
+           v
++----------------------+
+|    Maze Structure    |
+|  - Cells             |
+|  - Walls             |
+|  - Grid              |
++----------+-----------+
+           |
+           v
++----------------------+
+| Babylon.js Renderer  |
++----------------------+
+________________________________________
+9. Project Structure
+maze-project/
+│
+├── public/
+│
+├── src/
+│   │
+│   ├── algorithms/
+│   │   ├── generator/
+│   │   │   └── DFSGenerator.ts
+│   │   │
+│   │   └── solver/
+│   │       └── DFSSolver.ts
+│   │
+│   ├── core/
+│   │   ├── Engine.ts
+│   │   ├── SceneManager.ts
+│   │   └── Config.ts
+│   │
+│   ├── maze/
+│   │   ├── Maze.ts
+│   │   ├── Cell.ts
+│   │   ├── Wall.ts
+│   │   └── Grid.ts
+│   │
+│   ├── rendering/
+│   │   ├── MazeRenderer.ts
+│   │   ├── MouseRenderer.ts
+│   │   ├── PathRenderer.ts
+│   │   └── Materials.ts
+│   │
+│   ├── animation/
+│   │   └── Animator.ts
+│   │
+│   ├── ui/
+│   │   ├── GUI.ts
+│   │   └── Controls.ts
+│   │
+│   ├── utils/
+│   │   ├── Stack.ts
+│   │   ├── Random.ts
+│   │   └── Helpers.ts
+│   │
+│   ├── styles/
+│   │
+│   └── main.ts
+│
+├── README.md
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+________________________________________
+10. Core Data Structures
+10.1 Cell Representation
+Each maze cell contains:
+interface Cell {
+    row: number;
+    col: number;
+
+    visited: boolean;
+
+    northWall: boolean;
+    eastWall: boolean;
+    southWall: boolean;
+    westWall: boolean;
+
+    isDeadEnd: boolean;
+    isSolutionPath: boolean;
+}
+________________________________________
+10.2 Maze Representation
+Cell[][]
+The maze grid is a 2D matrix.
+________________________________________
+10.3 Stack Structure
+Used in:
+	generation, 
+	solving, 
+	backtracking. 
+class Stack<T> {
+    push(item: T): void
+    pop(): T | undefined
+    peek(): T | undefined
+    isEmpty(): boolean
+}
+________________________________________
+11. Maze Generation Algorithm
+Algorithm Type
+Randomized Depth-First Search
+________________________________________
+Steps
+Step 1
+Initialize all walls intact.
+Step 2
+Choose random starting cell.
+Step 3
+Mark current cell visited.
+Step 4
+Find unvisited neighbors.
+Step 5
+Randomly select neighbor.
+Step 6
+Remove wall between cells.
+Step 7
+Push current cell onto stack.
+Step 8
+Move to selected neighbor.
+Step 9
+If dead end:
+	pop stack, 
+	backtrack. 
+Step 10
+Continue until stack empty.
+________________________________________
+Generation Pseudocode
+push(start)
+
+while stack not empty:
+    current = stack.peek()
+
+    neighbors = unvisitedNeighbors(current)
+
+    if neighbors exist:
+        next = random(neighbors)
+
+        removeWall(current, next)
+
+        mark next visited
+
+        push(next)
+
+    else:
+        pop()
+________________________________________
+12. Maze Solving Algorithm
+Algorithm Type
+DFS Backtracking Solver
+________________________________________
+Solver Steps
+Step 1
+Start at maze entrance.
+Step 2
+Try valid directions randomly.
+Step 3
+Move if no wall exists.
+Step 4
+Push path onto stack.
+Step 5
+If trapped:
+	mark dead end, 
+	backtrack. 
+Step 6
+Repeat until exit found.
+________________________________________
+Solver Pseudocode
+push(start)
+
+while stack not empty:
+    current = stack.peek()
+
+    if current == goal:
+        success
+
+    next = availableNeighbor()
+
+    if next exists:
+        push(next)
+    else:
+        mark dead end
+        pop()
+________________________________________
+13. Rendering System
+Rendering Components
+Component	Purpose
+Floor Mesh	Maze ground
+Wall Meshes	Maze structure
+Mouse Mesh	Traversal visualization
+Path Highlights	Solution visualization
+Dead-End Indicators	Backtracking display
+________________________________________
+14. Graphics Pipeline
+Maze Data
+    ↓
+Mesh Generation
+    ↓
+Babylon.js Scene
+    ↓
+GPU Rendering
+    ↓
+Canvas Display
+________________________________________
+15. Animation System
+The animation engine controls:
+	generation timing, 
+	solver movement, 
+	wall destruction effects, 
+	path updates. 
+________________________________________
+Animation States
+State	Description
+Idle	Waiting
+Generating	Building maze
+Solving	Traversing maze
+Completed	Final path shown
+________________________________________
+16. Camera System
+Primary Camera
+ArcRotateCamera
+Advantages:
+	easy navigation, 
+	zoom support, 
+	top-down visibility, 
+	ideal for debugging. 
+________________________________________
+Optional Cameras
+Camera	Purpose
+UniversalCamera	First-person
+FreeCamera	Exploration
+FollowCamera	Mouse tracking
+________________________________________
+17. Material & Color System
+Object	Color
+Walls	Gray/White
+Floor	Dark
+Current Mouse	Red
+Dead Ends	Blue
+Final Path	Green
+________________________________________
+18. Bonus Features
+Cyclic Mazes
+Randomly remove extra walls:
+1 in 20 probability
+Creates loops/cycles.
+________________________________________
+Additional Features
+Possible enhancements:
+	FPS mode, 
+	minimap, 
+	statistics, 
+	multiple algorithms, 
+	lighting effects, 
+	shadow system, 
+	sound effects. 
+________________________________________
+19. Complexity Analysis
+Maze Generation
+Time Complexity
+O(R×C)
+Each cell visited once.
+________________________________________
+Space Complexity
+O(R×C)
+Due to stack + grid storage.
+________________________________________
+Maze Solving
+Time Complexity
+O(R×C)
+Worst case explores entire maze.
+________________________________________
+
+
+20. Development Roadmap
+
+Phase 1 — Project Setup
+Duration: 1 Day
+Tasks:
+	initialize Vite, 
+	install Babylon.js, 
+	setup TypeScript, 
+	configure GitHub. 
+________________________________________
+Phase 2 — Maze Logic
+Duration: 1–2 Days
+Tasks:
+	cell system, 
+	wall system, 
+	stack implementation, 
+	DFS generation. 
+________________________________________
+Phase 3 — Rendering
+Duration: 1–2 Days
+Tasks:
+	render grid, 
+	render walls, 
+	materials, 
+	camera setup. 
+________________________________________
+Phase 4 — Animation
+Duration: 1 Day
+Tasks:
+	generation animation, 
+	traversal animation, 
+	timing control. 
+________________________________________
+Phase 5 — Solver
+Duration: 1 Day
+Tasks:
+	DFS solving, 
+	backtracking visualization, 
+	dead-end coloring. 
+________________________________________
+Phase 6 — Polish
+Duration: 1 Day
+Tasks:
+	optimization, 
+	UI, 
+	README, 
+	recording. 
+________________________________________
+21. Testing Strategy
+Unit Tests
+Test:
+	stack behavior, 
+	wall removal, 
+	neighbor detection, 
+	traversal validity. 
+________________________________________
+Integration Tests
+Test:
+	generation correctness, 
+	maze solvability, 
+	rendering synchronization. 
+________________________________________
+Visual Testing
+Verify:
+	animation smoothness, 
+	correct coloring, 
+	proper wall placement. 
+________________________________________
+22. GitHub Strategy
+Recommended commits:
+Initial Babylon.js setup
+Implemented maze cell structure
+Added DFS maze generation
+Implemented wall rendering
+Added maze generation animation
+Implemented DFS solver
+Added dead-end visualization
+Added final path highlighting
+Optimized rendering
+Completed documentation
+________________________________________
+23. README Structure
+Recommended sections:
+1. Project Overview
+2. Features
+3. Technologies
+4. Algorithms
+5. Installation
+6. Usage
+7. Screenshots
+8. Loom Demo
+9. Folder Structure
+10. Future Improvements
+________________________________________
+24. Risk Analysis
+Risk	Mitigation
+Rendering lag	mesh optimization
+Algorithm bugs	unit testing
+Animation desync	centralized animator
+Memory overhead	efficient data structures
+________________________________________
+25. Final Expected Output
+The final system should:
+	dynamically generate mazes, 
+	animate wall carving, 
+	visually solve the maze, 
+	show dead ends and backtracking, 
+	provide smooth interactive graphics, 
+	and maintain clean modular architecture. 
+________________________________________
+26. Conclusion
+This project combines:
+	computer graphics, 
+	procedural generation, 
+	data structures, 
+	graph algorithms, 
+	animation, 
+	and interactive visualization. 
+The chosen architecture using:
+	TypeScript, 
+	Babylon.js, 
+	and modular DFS systems 
+provides:
+	scalability, 
+	maintainability, 
+	professional structure, 
+	and strong visualization capability suitable for both academic evaluation and portfolio presentation.
+
+
+
+1.Maze Generator & Solver Visualization System
+System Design Document
+________________________________________
+1. System Overview
+The system is an interactive real-time visualization platform that:
+	procedurally generates mazes, 
+	visualizes maze construction, 
+	solves the maze automatically, 
+	animates traversal and backtracking, 
+	and renders the process in a 3D environment. 
+The architecture follows a:
+Modular Event-Driven Layered Design
+to separate:
+	algorithms, 
+	rendering, 
+	animation, 
+	state management, 
+	and UI logic. 
+________________________________________
+2. High-Level Architecture
++--------------------------------------------------+
+|                  User Interface                  |
+|  Buttons • Controls • Speed • Restart • Camera  |
++-------------------------+------------------------+
+                          |
+                          v
++--------------------------------------------------+
+|                Application Controller            |
+|          State Manager • Event Coordinator       |
++-------------------------+------------------------+
+                          |
+          +---------------+---------------+
+          |                               |
+          v                               v
++----------------------+      +----------------------+
+|   Maze Generator     |      |     Maze Solver      |
+|    DFS Algorithm     |      |  DFS Backtracking    |
++----------+-----------+      +----------+-----------+
+           |                             |
+           +-------------+---------------+
+                         |
+                         v
++--------------------------------------------------+
+|                Maze Data Model                   |
+|   Grid • Cells • Walls • Paths • Visited State  |
++-------------------------+------------------------+
+                          |
+                          v
++--------------------------------------------------+
+|                Rendering Engine                  |
+|      Babylon.js Scene • Meshes • Materials      |
++-------------------------+------------------------+
+                          |
+                          v
++--------------------------------------------------+
+|                 Graphics Hardware                |
+|                WebGL / WebGPU GPU                |
++--------------------------------------------------+
+________________________________________
+3. Architectural Pattern
+Pattern Used
+Layered Modular Architecture
+________________________________________
+Why This Architecture?
+Advantages:
+	clean separation of concerns, 
+	easier debugging, 
+	reusable algorithms, 
+	scalable rendering, 
+	maintainable codebase, 
+	easier testing. 
+________________________________________
+4. Core Subsystems
+The system is divided into six major subsystems:
+Subsystem	Responsibility
+Core Engine	App lifecycle and state
+Maze System	Maze data representation
+Generator System	Maze creation
+Solver System	Maze traversal
+Rendering System	Graphics rendering
+UI System	User interaction
+________________________________________
+5. Core Engine Design
+Responsibilities
+The Core Engine manages:
+	initialization, 
+	render loop, 
+	update cycle, 
+	scene lifecycle, 
+	event synchronization. 
+________________________________________
+Core Components
+Core/
+ ├── Engine.ts
+ ├── SceneManager.ts
+ ├── StateManager.ts
+ └── Config.ts
+________________________________________
+Engine Lifecycle
+Initialize Engine
+      ↓
+Create Scene
+      ↓
+Initialize Maze
+      ↓
+Initialize Renderer
+      ↓
+Initialize UI
+      ↓
+Start Render Loop
+      ↓
+Update + Render Every Frame
+________________________________________
+6. Maze Data Model Design
+Maze Representation
+The maze is represented as:
+Grid Graph Structure
+Each cell is a graph node.
+Walls represent graph edges.
+________________________________________
+Cell Structure
+class Cell {
+    row: number
+    col: number
+
+    visited: boolean
+
+    northWall: boolean
+    eastWall: boolean
+    southWall: boolean
+    westWall: boolean
+
+    isDeadEnd: boolean
+    isPath: boolean
+}
+________________________________________
+Grid Structure
+class MazeGrid {
+    rows: number
+    cols: number
+
+    cells: Cell[][]
+}
+________________________________________
+Relationship Model
+MazeGrid
+   |
+   +---- Cell[][]
+              |
+              +---- Walls
+              +---- State
+              +---- Traversal Flags
+________________________________________
+7. Maze Generator System Design
+Algorithm
+Randomized DFS Recursive Backtracking
+________________________________________
+Responsibilities
+The Generator:
+	selects neighbors, 
+	removes walls, 
+	tracks visited cells, 
+	controls generation order, 
+	emits animation events. 
+________________________________________
+Generator Components
+Generator/
+ ├── DFSGenerator.ts
+ ├── NeighborSelector.ts
+ ├── WallRemover.ts
+ └── GenerationAnimator.ts
+________________________________________
+Generator Flow
+Choose Start Cell
+        ↓
+Mark Visited
+        ↓
+Find Unvisited Neighbors
+        ↓
+Select Random Neighbor
+        ↓
+Remove Wall
+        ↓
+Push Current Cell
+        ↓
+Move Forward
+        ↓
+Dead End?
+   ↙         ↘
+ Yes         No
+  ↓           ↓
+Pop Stack   Continue
+________________________________________
+8. Solver System Design
+Algorithm
+DFS Stack-Based Backtracking
+________________________________________
+Responsibilities
+The Solver:
+	traverses maze, 
+	detects dead ends, 
+	backtracks, 
+	stores path history, 
+	emits traversal events. 
+________________________________________
+Solver Components
+Solver/
+ ├── DFSSolver.ts
+ ├── PathTracker.ts
+ ├── DeadEndManager.ts
+ └── SolverAnimator.ts
+________________________________________
+Solver Flow
+Start Position
+      ↓
+Find Valid Neighbor
+      ↓
+Move Forward
+      ↓
+Push Stack
+      ↓
+Goal Reached?
+   ↙         ↘
+ Yes         No
+  ↓           ↓
+Finish     Continue
+                ↓
+          Dead End?
+           ↙    ↘
+         Yes     No
+          ↓       ↓
+      Backtrack Continue
+________________________________________
+9. Rendering System Design
+Rendering Pipeline
+Maze Data
+    ↓
+Mesh Builder
+    ↓
+Babylon.js Scene Graph
+    ↓
+GPU Buffers
+    ↓
+Rasterization
+    ↓
+Screen Output
+________________________________________
+Rendering Components
+Rendering/
+ ├── MazeRenderer.ts
+ ├── WallRenderer.ts
+ ├── FloorRenderer.ts
+ ├── MouseRenderer.ts
+ ├── PathRenderer.ts
+ └── MaterialManager.ts
+________________________________________
+Rendering Responsibilities
+Renderer	Responsibility
+MazeRenderer	Entire maze scene
+WallRenderer	Wall mesh creation
+FloorRenderer	Ground rendering
+MouseRenderer	Mouse visualization
+PathRenderer	Path highlighting
+________________________________________
+10. Mesh Design
+Wall Mesh Strategy
+Each wall is represented as:
+Thin Box Mesh
+Advantages:
+	simple collision, 
+	lightweight rendering, 
+	easy scaling. 
+________________________________________
+Floor Mesh Strategy
+Single large plane mesh.
+________________________________________
+Mouse Representation
+Possible options:
+	sphere mesh, 
+	glowing orb, 
+	emissive cube. 
+Recommended:
+Emissive Sphere Mesh
+________________________________________
+11. Animation System Design
+Animation Model
+Event-Driven Incremental Animation
+________________________________________
+Animation Responsibilities
+The Animator:
+	controls speed, 
+	synchronizes updates, 
+	schedules state changes, 
+	emits frame updates. 
+________________________________________
+Animation Flow
+Algorithm Step
+      ↓
+Animation Event
+      ↓
+Renderer Update
+      ↓
+Frame Render
+      ↓
+Delay Timer
+      ↓
+Next Step
+________________________________________
+12. Event System Design
+Event-Driven Communication
+Subsystems communicate through events.
+________________________________________
+Event Examples
+Event	Description
+CELL_VISITED	Generation visit
+WALL_REMOVED	Wall destruction
+SOLVER_MOVED	Solver movement
+DEAD_END_FOUND	Backtracking
+PATH_COMPLETED	Solution found
+________________________________________
+Event Flow
+Generator
+    ↓ emits
+EventBus
+    ↓ notifies
+Renderer
+________________________________________
+13. State Management Design
+Global States
+enum AppState {
+    IDLE,
+    GENERATING,
+    SOLVING,
+    COMPLETED
+}
+________________________________________
+State Transition Diagram
+IDLE
+  ↓
+GENERATING
+  ↓
+SOLVING
+  ↓
+COMPLETED
+  ↓
+RESTART
+  ↓
+IDLE
+________________________________________
+14. Camera System Design
+Primary Camera
+ArcRotateCamera
+Advantages:
+	orbit movement, 
+	zoom, 
+	easy debugging, 
+	top-down visibility. 
+________________________________________
+Camera Modes
+Mode	Purpose
+Top Down	Main visualization
+Isometric	Better depth
+Follow Mode	Track mouse
+FPS Mode	Bonus feature
+________________________________________
+Camera Architecture
+CameraManager
+   |
+   +---- ArcRotateCamera
+   +---- UniversalCamera
+________________________________________
+15. Material System Design
+Material Categories
+Material	Usage
+WallMaterial	Maze walls
+FloorMaterial	Ground
+MouseMaterial	Active traversal
+DeadEndMaterial	Failed paths
+SolutionMaterial	Final path
+________________________________________
+Rendering Style
+Recommended:
+	low-poly clean style, 
+	emissive highlights, 
+	high contrast colors. 
+________________________________________
+16. UI System Design
+UI Components
+UI/
+ ├── GenerateButton
+ ├── SolveButton
+ ├── SpeedSlider
+ ├── CameraToggle
+ └── ResetButton
+________________________________________
+UI Responsibilities
+Component	Responsibility
+Generate	Start maze generation
+Solve	Start solving
+Speed Slider	Animation speed
+Camera Toggle	Switch view
+Reset	Restart simulation
+________________________________________
+17. Collision Design
+Although collision is optional initially,
+the system supports:
+	mouse movement collision, 
+	wall boundaries, 
+	future FPS traversal. 
+________________________________________
+Collision Strategy
+Wall Meshes
+    ↓
+Bounding Boxes
+    ↓
+Babylon Collision System
+________________________________________
+18. Memory Design
+Primary Memory Consumers
+Resource	Usage
+Cell Grid	Maze structure
+Meshes	Wall rendering
+Stack	DFS traversal
+Materials	GPU resources
+________________________________________
+Optimization Strategies
+Instanced Meshes
+Reuse wall geometry.
+Shared Materials
+Reduce GPU overhead.
+Single Floor Mesh
+Avoid unnecessary geometry.
+________________________________________
+19. Error Handling Design
+Potential Errors
+Error	Solution
+Invalid grid size	validation
+Empty stack pop	safety checks
+Renderer sync issue	event queue
+Infinite traversal	visited tracking
+________________________________________
+20. Scalability Design
+The architecture supports future:
+	multiple algorithms, 
+	multiplayer traversal, 
+	AI pathfinding, 
+	procedural environments, 
+	larger worlds. 
+________________________________________
+21. Future Extensibility
+Planned Extensions
+Feature	Difficulty
+A* Solver	Medium
+BFS Generator	Medium
+FPS Exploration	Medium
+Lighting Effects	Easy
+Shadows	Easy
+WebGPU Optimization	Hard
+________________________________________
+22. UML-Style Component Relationships
++-------------------+
+|   StateManager    |
++-------------------+
+          |
+          v
++-------------------+
+|      MazeGrid     |
++-------------------+
+      /       \
+     v         v
++----------+ +----------+
+|Generator | |  Solver  |
++----------+ +----------+
+      \       /
+       v     v
++-------------------+
+|     EventBus      |
++-------------------+
+          |
+          v
++-------------------+
+|     Renderer      |
++-------------------+
+          |
+          v
++-------------------+
+|   Babylon Scene   |
++-------------------+
+________________________________________
+23. Rendering Lifecycle
+Create Scene
+      ↓
+Generate Maze Data
+      ↓
+Create Meshes
+      ↓
+Apply Materials
+      ↓
+Render Frame
+      ↓
+Animate Updates
+      ↓
+Re-render
+________________________________________
+24. Deployment Design
+Local Development
+npm run dev
+________________________________________
+Production Build
+npm run build
+________________________________________
+Hosting Options
+Platform	Recommendation
+Vercel	Excellent
+Netlify	Excellent
+GitHub Pages	Good
+________________________________________
+25. Security Considerations
+Minimal security concerns since:
+	no authentication, 
+	no backend, 
+	no database, 
+	local rendering only. 
+Main focus:
+	dependency safety, 
+	package integrity. 
+________________________________________
+26. Final System Behavior
+The completed system will:
+	initialize a Babylon.js scene, 
+	generate a procedural maze, 
+	dynamically animate wall carving, 
+	visualize DFS traversal, 
+	solve the maze, 
+	backtrack from dead ends, 
+	highlight final path, 
+	provide interactive controls, 
+	render smoothly in real time. 
+________________________________________
+27. Design Summary
+This system design provides:
+Strong Separation of Concerns
+Algorithms independent from rendering.
+Scalable Architecture
+Supports future extensions.
+Efficient Rendering
+Optimized mesh strategy.
+Maintainable Codebase
+Modular folder structure.
+Professional Graphics Pipeline
+Suitable for:
+	computer graphics coursework, 
+	portfolio presentation, 
+	algorithm visualization projects.
+
