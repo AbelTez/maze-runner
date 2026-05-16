@@ -1,9 +1,10 @@
-import { Scene, MeshBuilder, Vector3 } from "@babylonjs/core";
-
+import { Scene, MeshBuilder, Vector3, Mesh, Color3, StandardMaterial } from "@babylonjs/core";
 import { MazeGrid } from "../maze/MazeGrid";
 import { Materials } from "./Materials";
 
 export class MazeRenderer {
+    private mouseMesh: Mesh | null = null;
+
   private scene: Scene;
 
   private maze: MazeGrid;
@@ -13,17 +14,20 @@ export class MazeRenderer {
   private wallHeight: number = 2;
 
   private wallThickness: number = 0.1;
+  private wallMeshes: Mesh[] = [];
 
   constructor(scene: Scene, maze: MazeGrid) {
     this.scene = scene;
     this.maze = maze;
-  }
+
+    this.createFloor();
+}
 
   render(): void {
-    this.createFloor();
+    this.clearWalls();
 
     this.renderWalls();
-  }
+}
 
   private createFloor(): void {
     const width = this.maze.cols * this.cellSize;
@@ -61,6 +65,7 @@ export class MazeRenderer {
         // WEST WALL
         if (cell.westWall) {
           this.createVerticalWall(x - this.cellSize / 2, z);
+          
         }
 
         // LAST ROW SOUTH WALL
@@ -90,6 +95,7 @@ export class MazeRenderer {
     wall.position = new Vector3(x, this.wallHeight / 2, z);
 
     wall.material = Materials.createWallMaterial(this.scene);
+    this.wallMeshes.push(wall);
   }
 
   private createVerticalWall(x: number, z: number): void {
@@ -106,5 +112,47 @@ export class MazeRenderer {
     wall.position = new Vector3(x, this.wallHeight / 2, z);
 
     wall.material = Materials.createWallMaterial(this.scene);
+    this.wallMeshes.push(wall);
   }
+  createMouse(): void {
+    this.mouseMesh = MeshBuilder.CreateSphere(
+        "mouse",
+        {
+            diameter: 0.7
+        },
+        this.scene
+    );
+
+    const material = new StandardMaterial(
+        "mouseMaterial",
+        this.scene
+    );
+
+    material.emissiveColor = new Color3(1, 0, 0);
+
+    this.mouseMesh.material = material;
+}
+updateMousePosition(
+    row: number,
+    col: number
+): void {
+    if (!this.mouseMesh) return;
+
+    const x = col * this.cellSize;
+
+    const z = row * this.cellSize;
+
+    this.mouseMesh.position = new Vector3(
+        x,
+        0.5,
+        z
+    );
+}
+  private clearWalls(): void {
+    for (const mesh of this.wallMeshes) {
+        mesh.dispose();
+    }
+
+    this.wallMeshes = [];
+}
 }
