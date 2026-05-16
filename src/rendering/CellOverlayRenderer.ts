@@ -1,4 +1,6 @@
-import { Scene, MeshBuilder, Mesh } from "@babylonjs/core";
+import { Scene } from "@babylonjs/core/scene";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { MazeGrid } from "../maze/MazeGrid";
 import { Materials } from "./Materials";
 

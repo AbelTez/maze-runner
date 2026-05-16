@@ -1,4 +1,6 @@
-import { Scene, MeshBuilder, Mesh, Vector3 } from "@babylonjs/core";
+import { Scene } from "@babylonjs/core/scene";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
 import type { MazeGrid } from "../maze/MazeGrid";
 import { Materials } from "./Materials";
 
@@ -17,9 +19,9 @@ export class InstancedWallRenderer {
   private maze: MazeGrid;
   private cellSize: number;
   private wallHeight: number;
+  private wallThickness: number;
   private wallSlots: WallSlot[] = [];
   private slotByKey = new Map<string, number>();
-  private tempPosition = new Vector3();
 
   constructor(
     scene: Scene,
@@ -32,6 +34,7 @@ export class InstancedWallRenderer {
     this.maze = maze;
     this.cellSize = cellSize;
     this.wallHeight = wallHeight;
+    this.wallThickness = wallThickness;
 
     this.buildWallSlots();
     this.syncAllWalls();
@@ -70,8 +73,16 @@ export class InstancedWallRenderer {
     const mesh = MeshBuilder.CreateBox(
       `wall-${dir}-${row}-${col}`,
       horizontal
-        ? { width: this.cellSize, height: this.wallHeight, depth: 0.1 }
-        : { width: 0.1, height: this.wallHeight, depth: this.cellSize },
+        ? {
+            width: this.cellSize,
+            height: this.wallHeight,
+            depth: this.wallThickness,
+          }
+        : {
+            width: this.wallThickness,
+            height: this.wallHeight,
+            depth: this.cellSize,
+          },
       this.scene,
     );
     mesh.material = Materials.getWallMaterial(this.scene);

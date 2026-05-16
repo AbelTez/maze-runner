@@ -11,7 +11,7 @@ import { UIManager, type AppPhase } from "../ui/UIManager";
 import type { OverlayKind } from "../rendering/CellOverlayRenderer.ts";
 import { Materials } from "../rendering/Materials";
 
-type RunPhase = "generate" | "solve" | "done";
+type RunPhase = "generate" | "generated" | "solve" | "done";
 
 export class MazeApp {
   private config: AppConfig;
