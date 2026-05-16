@@ -76,7 +76,7 @@ src/
 | Quality | Auto-detect or force Low/Medium/High |
 | Camera | Isometric or top-down |
 
-## Roadmap (not yet implemented)
+## potential improvement (not yet implemented)
 
 - Prim & recursive-division generators
 - BFS & A* solvers
