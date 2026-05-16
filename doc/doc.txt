@@ -1116,3 +1116,37 @@ Suitable for:
 	portfolio presentation, 
 	algorithm visualization projects.
 
+
+
+
+
+
+HOW IT WORKS 
+
+Step 1 : Create a manual grid
+
+Create dynamically an HTML-table-grid using user inputs (rows & columns).
+Create walls manually inside the grid by simple click / right click / double click, allowing user to create a range of bricks only by two clicks
+Create start and destination points by right clicks
+
+Step 2 : Logic
+
+Start with an empty grid and localize destination point coordinates and its position versus start point
+Create elementary functions goUp(), goRight(), goDown(), goLeft() and run the best one towards the destination point, and check position after every move.
+Create what I called "priority" functions to run the next move towards the best next free cell when the direction is hidden by wall cell. Example : Run goRUDL() when the target is north east (1-Right, 2-Up, 3-Down, 4-Left).
+Because the path is often blocked by walls in a no-way cell, I created an escape function to go back and mark that cell as a temporary forbidden cell. I called that situation as a black hole, and the function.. escapeBlackHole().
+Sometimes, the moving logic described above turns out inefficient and path is blocked after each try/retry. The provided solution was creating random functions to change priority of moves. the idea : Keep trying whilst avoiding "black holes" to progress then back to the logic above.  
+Because logic doesn't keep track of previous paths, and thanks to async functions allowing delays between moves, the program can keep trying infinitely without risking a memory abuse. keep trying when the target is not reached, when there's realy no way out, will allow us to change the configuration of the maze, in real time, like opening some cells in the wall.
+Behind the scenes, once the maze is solved, a cleaning routine was necessary to clean remaining "garbage" from "escaping black holes".
+
+Step 3 : Maze generator
+
+I customized a north-west algorithm by adding east cell randomly. The maze can be generated just by looking at each cell independantly without keeping any state at all. Thus, a big size maze generation won't be limited by a greedy algorithm.
+The texture of the resulted maze is good enough, and sometimes quite difficult to solve.
+The generation is progressive and quite nice to watch, begining with an empty grid of cells, folowed by walls generation and ended by erasing cells leaving behind a finished maze on a white background. 
+
+Step 4 : Instructions
+
+User should submit number of rows and columns to generate a random maze.
+Once the maze is generated, user should put an origin A by right clicking on a cell (even busy), and a destination point B by a second right click on a cell.
+Click "Solve". The algorithm runs and try to find a way towards destination point B. If there's no solution, the algorithm continue infinitely trying to find a way. This could be useful when user wants to open a way, in real time, to help solve an insolvable maze at the begining. Thus, there are two approaches to procced : User search for a path, then put A, B points on its ends. Or Put A and B points blindly and challenge the algorithm to find a way, if it turns out that it's insolvable, user can click on a wall to open one or more of its cells
