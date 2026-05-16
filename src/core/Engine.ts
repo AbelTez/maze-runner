@@ -36,8 +36,8 @@ export class EngineManager {
       "camera",
       Math.PI / 2,
       Math.PI / 3,
-      30,
-      new Vector3(0, 0, 0),
+      40,
+      new Vector3(5, 0, 5),
       scene,
     );
 
@@ -63,5 +63,8 @@ export class EngineManager {
     ground.material = groundMaterial;
 
     return scene;
+  }
+  public getScene(): Scene {
+    return this.scene;
   }
 }
