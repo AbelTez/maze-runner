@@ -20,4 +20,9 @@ export class Stack<T> {
     size(): number {
         return this.items.length;
     }
+    forEach(callback: (item: T) => void): void {
+        for (let i = 0; i < this.items.length; i++) {
+            callback(this.items[i]);
+        }
+    }
 }

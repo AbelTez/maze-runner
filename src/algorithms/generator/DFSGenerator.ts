@@ -3,6 +3,11 @@ import { Cell } from "../../maze/Cell";
 import { Stack } from "../../utils/Stack";
 
 
+export interface GenerationStepDelta {
+    wallCells: Array<{ row: number; col: number }>;
+    visitedCell: { row: number; col: number } | null;
+}
+
 export class DFSGenerator {
     private maze: MazeGrid;
 
@@ -11,6 +16,11 @@ export class DFSGenerator {
     private currentCell: Cell | null = null;
 
     public completed: boolean = false;
+
+    private lastDelta: GenerationStepDelta = {
+        wallCells: [],
+        visitedCell: null,
+    };
 
     constructor(maze: MazeGrid) {
         this.maze = maze;
@@ -27,6 +37,8 @@ export class DFSGenerator {
     }
 
     step(): void {
+        this.lastDelta = { wallCells: [], visitedCell: null };
+
         if (this.stack.isEmpty()) {
             this.completed = true;
             return;
@@ -59,10 +71,22 @@ export class DFSGenerator {
         next.visited = true;
 
         this.stack.push(next);
+
+        this.lastDelta = {
+            wallCells: [
+                { row: current.row, col: current.col },
+                { row: next.row, col: next.col },
+            ],
+            visitedCell: { row: next.row, col: next.col },
+        };
     }
 
     getCurrentCell(): Cell | null {
         return this.currentCell;
+    }
+
+    getLastDelta(): GenerationStepDelta {
+        return this.lastDelta;
     }
 
     private getUnvisitedNeighbors(

@@ -1,14 +1,89 @@
 html,
 body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: #0a0b10;
+  color: #e8eaef;
 }
 
 #renderCanvas {
-    width: 100%;
-    height: 100%;
-    touch-action: none;
-    display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  display: block;
+}
+
+#hud {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  pointer-events: auto;
+  max-width: 320px;
+}
+
+.hud-panel {
+  background: rgba(12, 14, 22, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.hud-panel h1 {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+label.row {
+  font-size: 0.85rem;
+  gap: 8px;
+}
+
+button {
+  background: #2a3350;
+  color: #f2f4f8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+button:hover {
+  background: #3a4670;
+}
+
+select,
+input[type="range"] {
+  accent-color: #6ea8ff;
+}
+
+.stats {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  opacity: 0.92;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.stats strong {
+  color: #9eb6ff;
+  font-weight: 600;
+  margin-right: 6px;
 }
